@@ -28,7 +28,7 @@ module RV32Core(
     wire [3:0] MemWriteD;
     wire [1:0] RegReadD;
     wire [2:0] BranchTypeD;
-    wire [4:0] AluContrlD;
+    wire [3:0] AluContrlD;
     wire [1:0] AluSrc2D;
     wire [2:0] RegWriteMW;
     wire [4:0] RdMW;

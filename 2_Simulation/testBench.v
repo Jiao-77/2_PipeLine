@@ -13,10 +13,10 @@
 // !!! ALL YOU NEED TO CHANGE IS 4 FILE PATH BELOW !!!	
 //				(they are all optional, you can run cpu without change paths here,if files are failed to open, we will not dump the content to .txt and will not try to initial your bram)
 //////////////////////////////////////////////////////////////////////////////////
-`define DataRamContentLoadPath "D:\\2024Study\\CompOrg\\lab2\\1_PipelineLab_jts2\\1_PipelineLab\\2_Simulation\\T22.data"
-`define InstRamContentLoadPath "D:\\2024Study\\CompOrg\\lab2\\1_PipelineLab_jts2\\1_PipelineLab\\2_Simulation\\T22.inst"
-`define DataRamContentSavePath "D:\\2024Study\\CompOrg\\lab2\\1_PipelineLab_jts2\\1_PipelineLab\\2_Simulation\\T22data.txt"
-`define InstRamContentSavePath "D:\\2024Study\\CompOrg\\lab2\\1_PipelineLab_jts2\\1_PipelineLab\\2_Simulation\\T22inst.txt"
+`define DataRamContentLoadPath "C:\Users\Administrator\Documents\1_PipelineLab\2_Simulation\T22.data"
+`define InstRamContentLoadPath "C:\Users\Administrator\Documents\1_PipelineLab\2_Simulation\T22.inst"
+`define DataRamContentSavePath "C:\Users\Administrator\Documents\1_PipelineLab\2_Simulation\T22data.txt"
+`define InstRamContentSavePath "C:\Users\Administrator\Documents\1_PipelineLab\2_Simulation\T22inst.txt"
 `define BRAMWORDS 4096  //a word is 32bit, so our bram is 4096*32bit
 //D:\2024Study\CompOrg\lab2\1_PipelineLab_jts2\1_PipelineLab\2_Simulation
 module testBench(

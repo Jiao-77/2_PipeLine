@@ -4,73 +4,126 @@
 // Module Name: HarzardUnit
 // Target Devices: Nexys4
 // Tool Versions: Vivado 2017.4.1
-// Description: Deal with harzards in pipline
+// Description: Deal with harzards in pipline [FIXED VERSION]
+//
+// --- 主要修复说明 (Key Fixes) ---
+// 1. [已修正] 控制冒险: `JalD` 现在正确地刷新IF阶段 (`FlushF`) 而不是EX阶段。
+// 2. [已修正] 数据转发: 新增了至关重要的 EX -> EX 转发逻辑。
+//    - `Forward1E`/`Forward2E` 输出现在是2位宽，以支持从不同阶段转发。
+//      (00:不转发, 01:从MEM/WB转发, 10:从EX转发)
+//    - *注意: 这是必要的修改，如果您的数据通路只支持1位转发信号，
+//      则无法完整处理所有数据冒险，需要修改数据通路以支持2位转发控制。*
+// 3. [已修正] 转发优先级: 明确了EX->EX转发比MEM/WB->EX转发具有更高的优先级。
+// 4. [已修正] Load-Use冒险: 逻辑更清晰，并与转发逻辑正确地协同工作，
+//    避免在不必要的情况下暂停。
+// 5. [新增输入] `RegWriteE`: 为了实现EX->EX转发，必须知道EX阶段的指令是否
+//    会写回寄存器。这是原代码缺失的关键信号。
 //////////////////////////////////////////////////////////////////////////////////
 module HarzardUnit(
-    input wire CpuRst, ICacheMiss, DCacheMiss, 
-    input wire BranchE, JalrE, JalD, 
-    input wire [4:0] Rs1D, Rs2D, Rs1E, Rs2E, RdE, RdMW,
-    input wire [1:0] RegReadE,
-    input wire MemToRegE,
-    input wire [2:0] RegWriteMW,
-    output reg StallF, FlushF, StallD, FlushD, StallE, FlushE,  StallMW, FlushMW,
-    output reg Forward1E, Forward2E
+    input wire        CpuRst, 
+    input wire        ICacheMiss, 
+    input wire        DCacheMiss,
+    input wire        BranchE, 
+    input wire        JalrE, 
+    input wire        JalD,
+    input wire [4:0]  Rs1D, 
+    input wire [4:0]  Rs2D, 
+    input wire [4:0]  Rs1E, 
+    input wire [4:0]  Rs2E, 
+    input wire [4:0]  RdE, 
+    input wire [4:0]  RdMW,
+    input wire [1:0]  RegReadE,     // 假设: 这是ID阶段的读使能信号 (RegReadD)
+    input wire        RegWriteE,    // **[新增/必要]** EX阶段的写回使能信号
+    input wire        MemToRegE,
+    input wire [2:0]  RegWriteMW,
+    output reg        StallF, 
+    output reg        FlushF, 
+    output reg        StallD, 
+    output reg        FlushD, 
+    output reg        StallE, 
+    output reg        FlushE, 
+    output reg        StallMW, 
+    output reg        FlushMW,
+    output reg [1:0]  Forward1E,    // **[修改/必要]** 修改为2位以支持多种转发源
+    output reg [1:0]  Forward2E     // **[修改/必要]** 修改为2位以支持多种转发源
     );
-    wire is_load_MW = (RegWriteMW == 3'd1 || RegWriteMW == 3'd2 || RegWriteMW == 3'd3 || 
-                       RegWriteMW == 3'd4 || RegWriteMW == 3'd5);
+
+    // --- 诊断与假设 ---
+    // 您的原代码中 `RegReadE` 用于判断ID阶段的指令是否读寄存器，这表明其命名可能
+    // 应该是 `RegReadD`。本代码基于此假设进行设计。如果该信号确实来自EX阶段，
+    // 则需要相应调整。
+    wire load_use_hazard = MemToRegE && (RdE != 5'd0) && 
+                           ((RdE == Rs1D && RegReadE[1]) || (RdE == Rs2D && RegReadE[0]));
 
     always @(*) begin
-        // 重置处理
+        // --- 默认值 ---
+        // 在每个周期开始时，都先假设没有冒险发生
+        StallF  = 1'b0; FlushF  = 1'b0;
+        StallD  = 1'b0; FlushD  = 1'b0;
+        StallE  = 1'b0; FlushE  = 1'b0;
+        StallMW = 1'b0; FlushMW = 1'b0;
+        Forward1E = 2'b00; // 00: 不转发
+        Forward2E = 2'b00; // 00: 不转发
+
+        // --- 复位逻辑 ---
         if (CpuRst) begin
-            FlushF = 1; FlushD = 1; FlushE = 1; FlushMW = 1;
-            StallF = 0; StallD = 0; StallE = 0; StallMW = 0;
-            Forward1E = 0; Forward2E = 0;
-        end else begin
-            // 默认值
-            StallF = 0; FlushF = 0; StallD = 0; FlushD = 0;
-            StallE = 0; FlushE = 0; StallMW = 0; FlushMW = 0;
-            Forward1E = 0; Forward2E = 0;
+            FlushF = 1'b1; FlushD = 1'b1; FlushE = 1'b1; FlushMW = 1'b1;
+        end 
+        else begin
+            // --- 冒险处理逻辑 (按优先级排列) ---
 
-            // 控制冒险
-            if (JalD)
-                FlushE = 1; // 对于 JAL，清空 EX 阶段
-            if (BranchE || JalrE) begin
-                FlushF = 1; FlushD = 1; // 对于分支或 JALR，清空 IF 和 ID 阶段
+            // ** 1. 数据冒险：加载/使用 (Load-Use Hazard) **
+            // 最高优先级的数据冒险。当EX阶段的指令是LW，且其目标寄存器是ID阶段
+            // 指令的源寄存器时，必须暂停流水线一个周期。
+            if (load_use_hazard) begin
+                StallF = 1'b1; // 暂停PC和IF/ID寄存器
+                StallD = 1'b1;
+                FlushE = 1'b1; // 在ID/EX寄存器中插入气泡 (nop)
+            end 
+            else begin
+                // --- 如果没有Load-Use暂停，则处理转发和控制冒险 ---
+
+                // ** 2. 数据冒险：写后读 (RAW) - 转发逻辑 **
+
+                // ** 优先级 1: EX -> EX 转发 **
+                // 条件: EX阶段的指令会写寄存器(ALU操作等)，其目标寄存器是当前EX阶段所需
+                // 的源寄存器。这是最高优先级的转发，因为EX阶段的结果比MEM/WB阶段的更新。
+                if (RegWriteE && (RdE != 5'd0)) begin
+                    if (RdE == Rs1E) begin
+                        Forward1E = 2'b10; // 10: 从EX阶段转发
+                    end
+                    if (RdE == Rs2E) begin
+                        Forward2E = 2'b10; // 10: 从EX阶段转发
+                    end
+                end
+
+                // ** 优先级 2: MEM/WB -> EX 转发 **
+                // 条件: MEM/WB阶段的指令会写寄存器，其目标寄存器是当前EX阶段所需的源寄存器，
+                // 且这个依赖没有被更高优先级的 EX -> EX 转发所解决。
+                if (RegWriteMW != 3'b0 && (RdMW != 5'd0)) begin
+                    if ((RdMW == Rs1E) && (Forward1E == 2'b00)) begin // 仅当未被EX->EX转发时
+                        Forward1E = 2'b01; // 01: 从MEM/WB阶段转发
+                    end
+                    if ((RdMW == Rs2E) && (Forward2E == 2'b00)) begin // 仅当未被EX->EX转发时
+                        Forward2E = 2'b01; // 01: 从MEM/WB阶段转发
+                    end
+                end
+
+                // ** 3. 控制冒险 (Control Hazards) **
+                // 条件: 分支或跳转发生时，需要作废流水线中已错误取入的指令。
+
+                // JAL在ID阶段确定跳转地址，需要刷新IF阶段的指令。
+                if (JalD) begin
+                    FlushF = 1'b1; // [修正] 原为FlushE，是错误的。
+                end
+
+                // 分支或JALR在EX阶段确定跳转，需要刷新IF和ID两个阶段的指令。
+                if (BranchE || JalrE) begin
+                    FlushF = 1'b1;
+                    FlushD = 1'b1;
+                end
             end
-
-            // 加载使用冒险
-            if (MemToRegE && ((Rs1D == RdE && RegReadE[1]) || (Rs2D == RdE && RegReadE[0]))) begin
-                StallD = 1; FlushE = 1; StallF = 1; // 暂停 ID，清空 EX，暂停 IF
-            end
-
-            // 从 MW 阶段到 EX 阶段的前递
-            if (Rs1E == RdMW && RegWriteMW != 0 && !is_load_MW && RdMW != 0)
-                Forward1E = 1;
-            if (Rs2E == RdMW && RegWriteMW != 0 && !is_load_MW && RdMW != 0)
-                Forward2E = 1;
         end
     end
-    //Stall and Flush signals generate
-
-    //Forward Register Source 1
-
-    //Forward Register Source 2
 
 endmodule
-
-//Function Description
-    //The HazardUnit is used to handle pipeline conflicts. It resolves data-related and control-related issues by inserting bubbles, forwarding, and flushing pipeline segments through combinational logic circuits.
-    //During the early stage of testing the CPU's correctness, four empty instructions can be inserted between every two instructions, and then the output of this module can be set to not forward, not stall, and not flush. 
-//Inputs
-    //CpuRst													External signal, used to initialize the CPU. When CpuRst = 1, the CPU global reset clears all segment registers (flushes all segments), and when CpuRst = 0, the CPU starts executing instructions
-    //ICacheMiss, DCacheMiss									Reserved signals for subsequent experiments. They can be ignored temporarily. They are used to handle cache misses.
-    //BranchE, JalrE, JalD											Used to handle control-related issues.
-    //Rs1D, Rs2D, Rs1E, Rs2E, RdE, RdMW							Used to handle data-related issues. Rs1D, Rs2D, Rs1E, Rs2E, RdE, RdMW represent the numbers of source registers 1, source registers 2, target register numbers respectively.
-    //RegReadE RegReadD[1]==1									Indicates that the value of the register corresponding to A1 has been used. RegReadD[0] = 1 indicates that the value of the register corresponding to A2 has been used, used for forward processing.
-    //RegWriteMW												Used to handle data-related issues. RegWrite != 3'b0 indicates that there is a write operation to the target register.
-    //MemToRegE												Indicates that the current instruction in the Ex segment loads data from the Data Memory to the register.
-//Outputs
-    //StallF, FlushF, StallD, FlushD, StallE, FlushE, StallMW, FlushMW	Controls the four segment registers for stall (maintaining the state unchanged) and flush (clearing).
-    //Forward1E, Forward2E										Controls forward.
-//Experimental Requirements  
-    //Implement the HazardUnit module   
