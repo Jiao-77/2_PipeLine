@@ -1,0 +1,116 @@
+D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/BRAMModule/InstructionRam.v {1 {vlog -work work -vopt -stats=none D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/BRAMModule/InstructionRam.v
+Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+-- Compiling module InstructionRam
+
+Top level modules:
+	InstructionRam
+
+} {} {}} D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/BRAMModule/DataRam.v {1 {vlog -work work -vopt -stats=none D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/BRAMModule/DataRam.v
+Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+-- Compiling module DataRam
+
+Top level modules:
+	DataRam
+
+} {} {}} D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/ControlUnit.v {1 {vlog -work work -vopt -stats=none D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/ControlUnit.v
+Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+-- Compiling module ControlUnit
+
+Top level modules:
+	ControlUnit
+
+} {} {}} D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/MWSegReg.v {1 {vlog -work work -vopt -stats=none D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/MWSegReg.v
+Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+-- Compiling module MWSegReg
+
+Top level modules:
+	MWSegReg
+
+} {} {}} D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/ALU.v {1 {vlog -work work -vopt -stats=none D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/ALU.v
+Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+-- Compiling module ALU
+
+Top level modules:
+	ALU
+
+} {} {}} D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/HarzardUnit.v {1 {vlog -work work -vopt -stats=none D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/HarzardUnit.v
+Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+-- Compiling module HarzardUnit
+
+Top level modules:
+	HarzardUnit
+
+} {} {}} D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/RV32Core.v {1 {vlog -work work -vopt -stats=none D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/RV32Core.v
+Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+-- Compiling module RV32Core
+
+Top level modules:
+	RV32Core
+
+} {} {}} D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/EXSegReg.v {1 {vlog -work work -vopt -stats=none D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/EXSegReg.v
+Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+-- Compiling module EXSegReg
+
+Top level modules:
+	EXSegReg
+
+} {} {}} D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/IDSegReg.v {1 {vlog -work work -vopt -stats=none D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/IDSegReg.v
+Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+-- Compiling module IDSegReg
+
+Top level modules:
+	IDSegReg
+
+} {} {}} D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/BranchDecisionMaking.v {1 {vlog -work work -vopt -stats=none D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/BranchDecisionMaking.v
+Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+-- Compiling module BranchDecisionMaking
+
+Top level modules:
+	BranchDecisionMaking
+
+} {} {}} D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/DataExt.v {1 {vlog -work work -vopt -stats=none D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/DataExt.v
+Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+-- Compiling module DataExt
+
+Top level modules:
+	DataExt
+
+} {} {}} D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/Parameters.v {1 {vlog -work work -vopt -stats=none D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/Parameters.v
+Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+
+} {} {}} D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/ImmOperandUnit.v {1 {vlog -work work -vopt -stats=none D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/ImmOperandUnit.v
+Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+-- Compiling module ImmOperandUnit
+
+Top level modules:
+	ImmOperandUnit
+
+} {} {}} D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/IFSegReg.v {1 {vlog -work work -vopt -stats=none D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/IFSegReg.v
+Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+-- Compiling module IFSegReg
+
+Top level modules:
+	IFSegReg
+
+} {} {}} D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/RegisterFile.v {1 {vlog -work work -vopt -stats=none D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/RegisterFile.v
+Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+-- Compiling module RegisterFile
+
+Top level modules:
+	RegisterFile
+
+} {} {}} D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/2_Simulation/testBench.v {1 {vlog -work work -vopt -stats=none D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/2_Simulation/testBench.v
+Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+-- Compiling module testBench
+
+Top level modules:
+	testBench
+
+} {} {}} D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/NPC_Generator.v {1 {vlog -work work -vopt -stats=none D:/2024Study/CompOrg/lab2/1_PipelineLab_jts2/1_PipelineLab/1_CPUCore_src/NPC_Generator.v
+Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+-- Compiling module NPC_Generator
+
+Top level modules:
+	NPC_Generator
+
+} {} {}}

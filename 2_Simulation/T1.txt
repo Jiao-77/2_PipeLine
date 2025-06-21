@@ -1,0 +1,30 @@
+
+T1.om:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+00010054 <__bss_start-0x105c>:
+   10054:	123450b7          	lui	ra,0x12345
+   10058:	00500113          	li	sp,5
+   1005c:	000101b7          	lui	gp,0x10
+   10060:	fff18193          	addi	gp,gp,-1 # ffff <__bss_start-0x10b1>
+   10064:	00208233          	add	tp,ra,sp
+   10068:	402082b3          	sub	t0,ra,sp
+   1006c:	0030c333          	xor	t1,ra,gp
+   10070:	0030e3b3          	or	t2,ra,gp
+   10074:	0030f433          	and	s0,ra,gp
+   10078:	00409493          	slli	s1,ra,0x4
+   1007c:	0040d513          	srli	a0,ra,0x4
+   10080:	4040d593          	srai	a1,ra,0x4
+   10084:	00312633          	slt	a2,sp,gp
+   10088:	003136b3          	sltu	a3,sp,gp
+   1008c:	01008713          	addi	a4,ra,16 # 12345010 <__global_pointer$+0x12333760>
+   10090:	00612793          	slti	a5,sp,6
+   10094:	00613813          	sltiu	a6,sp,6
+   10098:	0ff0c893          	xori	a7,ra,255
+   1009c:	0ff0e913          	ori	s2,ra,255
+   100a0:	0ff0f993          	andi	s3,ra,255
+   100a4:	abcdea37          	lui	s4,0xabcde
+   100a8:	00001a97          	auipc	s5,0x1
+   100ac:	00000013          	nop

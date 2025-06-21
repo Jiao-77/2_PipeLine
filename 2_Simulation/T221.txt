@@ -1,0 +1,32 @@
+
+T221.om:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+00010054 <_start>:
+   10054:	000100b7          	lui	ra,0x10
+   10058:	00008137          	lui	sp,0x8
+   1005c:	000011b7          	lui	gp,0x1
+   10060:	00000237          	lui	tp,0x0
+   10064:	0005a2b7          	lui	t0,0x5a
+   10068:	00010337          	lui	t1,0x10
+   1006c:	000083b7          	lui	t2,0x8
+   10070:	0020a023          	sw	sp,0(ra) # 10000 <_start-0x54>
+   10074:	000011b7          	lui	gp,0x1
+   10078:	00000237          	lui	tp,0x0
+   1007c:	0005a2b7          	lui	t0,0x5a
+   10080:	00010337          	lui	t1,0x10
+   10084:	000083b7          	lui	t2,0x8
+   10088:	00209223          	sh	sp,4(ra)
+   1008c:	000011b7          	lui	gp,0x1
+   10090:	00000237          	lui	tp,0x0
+   10094:	0005a2b7          	lui	t0,0x5a
+   10098:	00010537          	lui	a0,0x10
+   1009c:	000083b7          	lui	t2,0x8
+   100a0:	00208323          	sb	sp,6(ra)
+   100a4:	0000a303          	lw	t1,0(ra)
+   100a8:	00409383          	lh	t2,4(ra)
+   100ac:	00608403          	lb	s0,6(ra)
+   100b0:	0040d483          	lhu	s1,4(ra)
+   100b4:	0060c503          	lbu	a0,6(ra)
